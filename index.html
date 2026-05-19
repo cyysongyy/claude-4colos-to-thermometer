@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" id="html-root">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -354,6 +354,18 @@
       .mini-tube { height:70px; }
       .day-chart { gap:4px; padding:12px 4px; }
     }
+
+    /* ── LANG TOGGLE ── */
+    .lang-fab{position:fixed;top:14px;right:14px;z-index:9999;
+      display:flex;background:#fff;border:2px solid #e2e8f0;border-radius:30px;
+      overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.12);}
+    .lang-fab button{border:none;background:transparent;padding:7px 15px;
+      font-size:0.8rem;font-weight:700;cursor:pointer;transition:all .2s;color:#64748b;}
+    .lang-fab button.active{background:#6366f1;color:#fff;border-radius:28px;}
+    .home-lang-row{display:flex;justify-content:center;gap:10px;margin-bottom:18px;}
+    .home-lang-btn{padding:9px 28px;border-radius:50px;border:2.5px solid #6366f1;
+      font-size:1rem;font-weight:700;cursor:pointer;transition:all .25s;background:#fff;color:#6366f1;}
+    .home-lang-btn.active{background:#6366f1;color:#fff;}
   </style>
 </head>
 <body>
@@ -365,21 +377,25 @@
 <div id="screen-home" class="screen active">
   <div class="card">
     <div class="home-logo">🎨</div>
-    <h1 class="home-title">情緒顏色探索</h1>
-    <p class="home-sub">透過四種顏色，認識自己的情緒<br>學習最健康的應對方式！</p>
+    <h1 class="home-title" id="h-title">情緒顏色探索</h1>
+    <p class="home-sub" id="h-sub">透過四種顏色，認識自己的情緒<br>學習最健康的應對方式！</p>
     <div class="color-row">
       <span style="--bd:2.2s;--bdelay:0s">😠</span>
       <span style="--bd:2.5s;--bdelay:0.3s">😰</span>
       <span style="--bd:2s;--bdelay:0.15s">😊</span>
       <span style="--bd:2.8s;--bdelay:0.5s">😢</span>
     </div>
-    <div class="home-info">
+    <div class="home-lang-row">
+      <button class="home-lang-btn active" id="hlb-zh" onclick="setLang('zh')">🇹🇼 中文</button>
+      <button class="home-lang-btn"        id="hlb-en" onclick="setLang('en')">🇺🇸 English</button>
+    </div>
+    <div class="home-info" id="h-info">
       🔴 生氣 &nbsp;|&nbsp; 🟡 焦慮 &nbsp;|&nbsp; 🟢 快樂 &nbsp;|&nbsp; 🔵 難過<br>
       每種情緒 <strong>2 道情境題</strong>，共 <strong>8 題</strong><br>
       完成後挑戰 🌡️ <strong>情緒溫度計</strong>，追蹤一整天！
     </div>
-    <button class="btn-primary" onclick="showScreen('select')">✨ 開始探索</button>
-    <a href="https://cyysongyy.github.io/RAW4EMOTIONS/instructions.html" class="back-link">← 返回遊戲說明</a>
+    <button class="btn-primary" id="h-start-btn" onclick="showScreen('select')">✨ 開始探索</button>
+    <a href="https://cyysongyy.github.io/RAW4EMOTIONS/instructions.html" class="back-link" id="h-back">← 返回遊戲說明</a>
 
     <!-- QR CODE -->
     <div class="qr-section">
@@ -395,7 +411,7 @@
 ════════════════════════════════════════ -->
 <div id="screen-select" class="screen">
   <div class="select-header">
-    <span class="select-title">選擇一種情緒</span>
+    <span class="select-title" id="sel-title">選擇一種情緒</span>
     <div class="score-pill">
       得分&nbsp;<span id="score-count">0/8</span>
       <div class="dot-row">
@@ -406,16 +422,16 @@
   </div>
   <div class="emotion-grid">
     <button class="emotion-card em-red"    id="card-red"    onclick="startEmotion('red')">
-      <div class="stamp">✓</div><span class="em-emoji">😠</span><span class="em-name">生氣</span><span class="em-label">🔴 紅色 🔥</span>
+      <div class="stamp">✓</div><span class="em-emoji">😠</span><span class="em-name" id="en-red">生氣</span><span class="em-label">🔴 紅色 🔥</span>
     </button>
     <button class="emotion-card em-yellow" id="card-yellow" onclick="startEmotion('yellow')">
-      <div class="stamp">✓</div><span class="em-emoji">😰</span><span class="em-name">焦慮</span><span class="em-label">🟡 黃色 ⚡</span>
+      <div class="stamp">✓</div><span class="em-emoji">😰</span><span class="em-name" id="en-yellow">焦慮</span><span class="em-label">🟡 黃色 ⚡</span>
     </button>
     <button class="emotion-card em-green"  id="card-green"  onclick="startEmotion('green')">
-      <div class="stamp">✓</div><span class="em-emoji">😊</span><span class="em-name">快樂</span><span class="em-label">🟢 綠色 ✨</span>
+      <div class="stamp">✓</div><span class="em-emoji">😊</span><span class="em-name" id="en-green">快樂</span><span class="em-label">🟢 綠色 ✨</span>
     </button>
     <button class="emotion-card em-blue"   id="card-blue"   onclick="startEmotion('blue')">
-      <div class="stamp">✓</div><span class="em-emoji">😢</span><span class="em-name">難過</span><span class="em-label">🔵 藍色 💧</span>
+      <div class="stamp">✓</div><span class="em-emoji">😢</span><span class="em-name" id="en-blue">難過</span><span class="em-label">🔵 藍色 💧</span>
     </button>
   </div>
   <p style="font-size:0.8rem;color:#94a3b8;margin-top:16px;text-align:center">完成一種情緒後可繼續選擇其他 🌟</p>
@@ -474,14 +490,14 @@
 <div id="screen-complete" class="screen">
   <div class="card">
     <div class="comp-trophy" id="comp-trophy">🏆</div>
-    <h2 class="comp-title">探索完成！</h2>
+    <h2 class="comp-title" id="comp-title-el">探索完成！</h2>
     <div class="comp-score"  id="comp-score">0/8</div>
-    <p  class="comp-score-label">題答對</p>
+    <p  class="comp-score-label" id="comp-score-label">題答對</p>
     <div class="comp-message" id="comp-message"></div>
-    <p  class="comp-strategies-title">🌟 你學到的應對策略：</p>
+    <p  class="comp-strategies-title" id="comp-strat-title">🌟 你學到的應對策略：</p>
     <div id="comp-strategies"></div>
-    <button class="btn-secondary" onclick="showScreen('thermo-intro')">🌡️ 繼續：情緒溫度計遊戲</button>
-    <button class="btn-primary"   style="margin-top:8px" onclick="restartGame()">🔄 重新挑戰四色遊戲</button>
+    <button class="btn-secondary" onclick="showScreen('thermo-intro')" id="comp-thermo-btn">🌡️ 繼續：情緒溫度計遊戲</button>
+    <button class="btn-primary"   style="margin-top:8px" onclick="restartGame()" id="comp-restart-btn">🔄 重新挑戰四色遊戲</button>
     <a href="https://cyysongyy.github.io/RAW4EMOTIONS/choose.html" class="back-link">← 返回原版主頁</a>
   </div>
 </div>
@@ -492,7 +508,7 @@
 <div id="screen-thermo-intro" class="screen">
   <div class="card">
     <div class="thermo-intro-icon">🏫🌡️</div>
-    <h2 style="font-size:1.45rem;font-weight:900;text-align:center;color:#1e1b4b;margin-bottom:6px">學校一天情緒溫度計</h2>
+    <h2 style="font-size:1.45rem;font-weight:900;text-align:center;color:#1e1b4b;margin-bottom:6px" id="ti-title">學校一天情緒溫度計</h2>
     <p style="font-size:0.9rem;color:#64748b;line-height:1.7;text-align:center;margin-bottom:8px">
       情緒就像溫度計，在學校一天裡<strong>高高低低</strong>！<br>
       跟著5個校園時段，記錄你的心情變化 📊
@@ -632,11 +648,11 @@
 
     <!-- Summary -->
     <div class="summary-msg"          id="summary-msg"></div>
-    <p style="font-weight:800;color:#1e1b4b;margin-bottom:8px;font-size:0.92rem">💡 下次在學校可以這樣做：</p>
+    <p style="font-weight:800;color:#1e1b4b;margin-bottom:8px;font-size:0.92rem" id="tr-tip-label">💡 下次在學校可以這樣做：</p>
     <div class="summary-strategies"   id="summary-strategies"></div>
 
-    <button class="btn-primary"   style="margin-top:16px" onclick="startThermoGame()">🔄 重新記錄一次</button>
-    <button class="btn-secondary"                         onclick="restartAll()">🏠 回到首頁重新開始</button>
+    <button class="btn-primary"   style="margin-top:16px" onclick="startThermoGame()" id="tr-redo-btn">🔄 重新記錄一次</button>
+    <button class="btn-secondary"                         onclick="restartAll()" id="tr-home-btn">🏠 回到首頁重新開始</button>
     <a href="https://cyysongyy.github.io/RAW4EMOTIONS/choose.html" class="back-link">← 返回原版主頁</a>
   </div>
 </div>
@@ -645,6 +661,306 @@
      GAME LOGIC
 ════════════════════════════════════════ -->
 <script>
+
+/* ─────────────────────────────────────────
+   BILINGUAL SYSTEM
+───────────────────────────────────────── */
+let lang = 'zh';
+
+const EN_EMOTIONS = {
+  red: {
+    name:'Angry', moodTag:'💢 Emotion: Angry',
+    questions:[
+      { scenario:'Your best friend accidentally broke your favorite toy, and you feel very angry…',
+        choices:[
+          {text:'Take a deep breath, calm down, then tell them how you feel',correct:true,emoji:'🌬️'},
+          {text:'Yell at them right away to show how angry you are',correct:false,emoji:'😡'},
+          {text:'Sit in a corner sulking and completely ignore them',correct:false,emoji:'😤'},
+          {text:'Secretly break their things too — an eye for an eye',correct:false,emoji:'💥'},
+        ],
+        explain:'Deep breathing helps calm the brain. When angry, emotions can overpower reason — waiting until you feel calmer before speaking helps the other person understand you, and problems are easier to solve.',
+        tip:'💡 Try "4-7-8 Breathing": inhale for 4 seconds, hold for 7, exhale slowly for 8 — it quickly calms your heartbeat and emotions.' },
+      { scenario:'You lost a game several times in a row and feel very frustrated and angry…',
+        choices:[
+          {text:'Slam the game controller on the floor to vent your anger',correct:false,emoji:'📱'},
+          {text:'Step away, take a few deep breaths, give yourself space to calm down',correct:true,emoji:'🌬️'},
+          {text:'Loudly blame the people nearby and say it is their fault you lost',correct:false,emoji:'👉'},
+          {text:'Force others to keep replaying until you win',correct:false,emoji:'🔄'},
+        ],
+        explain:'Leaving the situation that triggered your anger, giving yourself a few minutes to cool down, is very healthy emotion management. Continuing while angry often makes things worse — a pause helps you regain clear thinking.',
+        tip:'💡 When you feel you are about to explode, try counting to 10 or getting a glass of water. Stepping away is not running away — it is protecting yourself and others.' }
+    ]
+  },
+  yellow: {
+    name:'Anxious', moodTag:'⚡ Emotion: Anxious',
+    questions:[
+      { scenario:'You have an important test tomorrow, and right now you are so nervous you cannot sleep…',
+        choices:[
+          {text:'Organize your study plan, take deep breaths, and tell yourself "I have done my best"',correct:true,emoji:'📋'},
+          {text:'Stay up all night cramming until dawn',correct:false,emoji:'😵'},
+          {text:'Hide under the covers crying, convinced you will fail',correct:false,emoji:'😭'},
+          {text:'Throw your textbooks away and pretend the test does not exist',correct:false,emoji:'🙈'},
+        ],
+        explain:'When anxious, the brain tends to make things seem scarier than they are. Making a plan, breathing deeply, and giving yourself positive encouragement can turn "panic" into "I am ready" — far better than an all-nighter.',
+        tip:'💡 A 5-minute bedtime exercise: write down 3 things you have already prepared for tomorrow so your brain knows "I did it" — making it easier to relax and sleep.' },
+      { scenario:'The teacher says you need to give an oral report in front of the whole class next week, and you are really nervous…',
+        choices:[
+          {text:'Pretend to be sick and try not to go to school that day',correct:false,emoji:'🤒'},
+          {text:'Snap at your family for no reason because you feel so bad',correct:false,emoji:'😤'},
+          {text:'Practice a few times, ask a friend to listen, and build your confidence step by step',correct:true,emoji:'🗣️'},
+          {text:'Decide you will definitely embarrass yourself, so why bother preparing',correct:false,emoji:'😔'},
+        ],
+        explain:"Avoiding things only makes anxiety grow. Through repeated practice, 'I can't do it' slowly becomes 'I can.' Practicing in front of a friend also gets you real encouragement and tips.",
+        tip:'💡 "Courage is not the absence of fear — it is deciding to act even when you are afraid." Every small attempt makes you a little braver!' }
+    ]
+  },
+  green: {
+    name:'Happy', moodTag:'🌟 Emotion: Happy',
+    questions:[
+      { scenario:'You got a great score on your test and feel really happy!',
+        choices:[
+          {text:'Excitedly share the good news with your family and thank them for their support',correct:true,emoji:'🤗'},
+          {text:'Brag loudly in front of classmates who scored lower',correct:false,emoji:'😏'},
+          {text:'Hide by yourself and enjoy it without telling anyone',correct:false,emoji:'🙈'},
+          {text:'Immediately demand your parents buy you lots of things',correct:false,emoji:'🛍️'},
+        ],
+        explain:'Sharing happiness with people you care about doubles the joy and strengthens your relationships. Thanking those who supported you is a beautiful quality — and it makes happiness even more meaningful.',
+        tip:'💡 Happiness is contagious! When you share good news, the other person feels happy too — that is the secret of "share joy, double the joy".' },
+      { scenario:'You and your friends won an award for your group project, and everyone is thrilled!',
+        choices:[
+          {text:'Tell others it was all your own work',correct:false,emoji:'🙋'},
+          {text:'Do not say thank you — winning is just expected',correct:false,emoji:'😑'},
+          {text:'Thank every friend who helped and share the happiness together',correct:true,emoji:'🤝'},
+          {text:'Keep celebrating in front of people who did not win to make them feel bad',correct:false,emoji:'😬'},
+        ],
+        explain:'Real happiness is inclusive — it is not built on making others feel bad. Thanking the teammates who worked hard together makes the success warmer, and friendships last longer.',
+        tip:'💡 "Thank you" is one of the most powerful phrases in the world. Learning to be grateful is the secret to keeping happiness abundant.' }
+    ]
+  },
+  blue: {
+    name:'Sad', moodTag:'💧 Emotion: Sad',
+    questions:[
+      { scenario:"Your best friend is moving far away because of their family's work situation…",
+        choices:[
+          {text:'Tell yourself it must be because you are not good enough, so your friend is leaving',correct:false,emoji:'😔'},
+          {text:"Blame your friend's parents and feel they ruined your friendship",correct:false,emoji:'😠'},
+          {text:'Write your feelings in a diary, tell your friend you will miss them, and promise to stay in touch',correct:true,emoji:'📔'},
+          {text:'Pretend you do not care and bury your sadness so no one notices',correct:false,emoji:'🎭'},
+        ],
+        explain:'Sadness is a completely normal emotion — you do not need to pretend to be strong. Writing or talking about your feelings helps you process grief. Staying in touch with your friend lets your friendship cross the distance.',
+        tip:'💡 Distance cannot stop a true friendship. Messages, video calls, handwritten letters… every way can keep the bond alive.' },
+      { scenario:'A model you spent a long time building was accidentally broken by your little sibling…',
+        choices:[
+          {text:'Allow yourself to be sad for a moment, then take a deep breath and think about rebuilding it together',correct:true,emoji:'🌱'},
+          {text:'Tell yourself you are really stupid and cannot do anything right',correct:false,emoji:'😞'},
+          {text:'Get very angry at your sibling and make them feel guilty',correct:false,emoji:'😤'},
+          {text:'Never build anything again because things always get broken anyway',correct:false,emoji:'😶'},
+        ],
+        explain:'Allowing yourself to be sad is the kindest thing you can do for yourself. You do not need to bounce back immediately — just do not get trapped in self-blame. When your feelings settle, see if you can turn the setback into a fresh start.',
+        tip:'💡 How you talk to yourself matters. Change "I am so stupid" to "This did not go well, but I can try again" — that small shift gives you much greater strength.' }
+    ]
+  }
+};
+
+const THERMO_SESSIONS_EN = [
+  { time:'Morning Study', icon:'🌅', timeLabel:'07:30',
+    scenario:'🏫 You walk into the classroom in the morning and sit down. There is a short quiz today, and your classmate next to you is nervously flipping through their notes — you wonder whether you studied hard enough last night…',
+    q:'How are you feeling right now?' },
+  { time:'Class Time', icon:'📚', timeLabel:'10:00',
+    scenario:'🎤 The teacher suddenly announces: "We will have group discussions, and each group must send one person to present at the front!" Classmates start whispering, wondering who will be chosen…',
+    q:'When you hear this, how do you feel?' },
+  { time:'Lunch Break', icon:'🍱', timeLabel:'12:30',
+    scenario:"🍱 During lunch, you carry your tray into the cafeteria. You see your friends laughing at another table — they haven't noticed you, and you are not sure whether to walk over…",
+    q:'How do you feel in this moment?' },
+  { time:'Afternoon Class', icon:'⚽', timeLabel:'14:30',
+    scenario:'⚽ PE class! The teacher divides everyone into groups for a competition. You are placed with classmates you do not know very well. Everyone stands together but no one speaks first — the atmosphere feels a little awkward…',
+    q:'In this situation, how do you feel?' },
+  { time:'After School', icon:'🎒', timeLabel:'17:00',
+    scenario:'🎒 Backpack on your shoulders — all of today\'s classes are over. Walking home, you quietly think back over everything that happened at school today…',
+    q:'Overall, how do you feel about today at school?' },
+];
+
+const THERMO_LEVELS_EN = {
+  red:    {label:'Angry! Very hot', sublabel:'Agitated/Furious'},
+  yellow: {label:'A bit anxious…', sublabel:'Nervous/Uneasy'},
+  blue:   {label:'Feeling a bit low', sublabel:'Sad/Down'},
+  green:  {label:'Calm and happy!', sublabel:'Happy/Peaceful'},
+};
+
+const THERMO_TIPS_EN = {
+  red:{
+    'Morning Study':'Angry before the quiz? Tidy your bag, tell yourself "emotions are separate from the test," and take 3 deep breaths before starting 🌬️',
+    'Class Time':'Already annoyed about presenting? Focus on "what can I prepare" instead of "how scared I am" — being ready beats anything 📝',
+    'Lunch Break':'Still angry at lunch? Leave the situation, find a quiet corner to sit, finish eating to give your body energy — then deal with it 🌿',
+    'Afternoon Class':'Angry during PE? Let your body move — running hard is a great outlet for frustration 🏃',
+    'After School':'Walking home with anger? Count trees along the road to pull your mind away from the anger, then think it through once home 🌳',
+  },
+  yellow:{
+    'Morning Study':'Nervous before the quiz? Quickly flip through your key notes and find 3 things "I know," then remind yourself "I prepared" 📋',
+    'Class Time':'Worried you will be chosen to present? Think of one opening sentence in your head — being ready means less panic 💡',
+    'Lunch Break':'Still worrying at lunch? Put away your books and let your brain rest for 10 minutes — it helps more than continuing to worry 🍱',
+    'Afternoon Class':'Anxious in your group? Start with one sentence: "Hi, I\'m ___! Let\'s do our best together!" — breaking the ice is that simple 🤝',
+    'After School':'Still thinking on the way home? Write down what you need to do tomorrow on your phone, organize it, then let go — home time is home time 📓',
+  },
+  blue:{
+    'Morning Study':'Feeling down in the morning? Say good morning to a classmate — just one word can brighten things a little ☀️',
+    'Class Time':'Hard to focus when your mood is low? Find one thing in the lesson that interests you and put your attention there 🔍',
+    'Lunch Break':'A bit sad at lunch? Walk over and sit with your friends — you do not need to say much, just having company makes a difference 💙',
+    'Afternoon Class':'Feeling low energy in the afternoon? Drink some water, stand up and stretch — a change of posture helps wake you up 💧',
+    'After School':'Going home with sadness? Change into comfortable clothes when you arrive and do one relaxing thing just for yourself 🌱',
+  },
+  green:{
+    'Morning Study':'Great mood at school! Share your smile with the classmate next to you — today will be wonderful ⭐',
+    'Class Time':'Feeling great! Pay close attention in class — that positive energy helps you remember what you learn today 💡',
+    'Lunch Break':'Enjoying lunch! Savor this relaxed time and chat with friends to recharge 😊',
+    'Afternoon Class':"In great shape! Try to say a few words to teammates you don't know well — let your good mood spread to the whole team 🌟",
+    'After School':'School went well today! Tell your family one thing that made you happy — bring that good feeling home 🤗',
+  },
+};
+
+const THERMO_STRATS_EN = {
+  red:   {icon:'😠🌬️', text:'When angry at school: leave the triggering situation, count to 10, take a deep breath before speaking or acting'},
+  yellow:{icon:'😰📋', text:'When anxious at school: write down your worries, break big tasks into small steps, do one thing at a time'},
+  blue:  {icon:'😢🤝', text:'When sad at school: find a trusted friend or teacher to talk to — saying it out loud always helps lighten the load'},
+  green: {icon:'😊⭐', text:'When happy at school: actively help classmates who need it and spread the positive energy'},
+};
+
+const STRATEGIES_EN = [
+  {icon:'😠🌬️', text:'When angry: take a deep breath first, then express your feelings calmly'},
+  {icon:'😰💪', text:'When anxious: prepare well, encourage yourself one step at a time'},
+  {icon:'😊🤝', text:'When happy: share with others and thank the people who support you'},
+  {icon:'😢📔', text:'When sad: allow yourself to feel sad, write it down, and keep in touch'},
+];
+
+const UI = {
+  zh:{
+    homeTitle:'情緒顏色探索',
+    homeSub:'透過四種顏色，認識自己的情緒<br>學習最健康的應對方式！',
+    homeInfo:'🔴 生氣 &nbsp;|&nbsp; 🟡 焦慮 &nbsp;|&nbsp; 🟢 快樂 &nbsp;|&nbsp; 🔵 難過<br>每種情緒 <strong>2 道情境題</strong>，共 <strong>8 題</strong><br>完成後挑戰 🌡️ <strong>情緒溫度計</strong>，追蹤一整天！',
+    homeStart:'✨ 開始探索',homeBack:'← 返回遊戲說明',
+    selTitle:'選擇一種情緒',scoreLabel:'得分',
+    prompt:'🤔 你會怎麼做？',
+    breathLabel:'吸 氣 ……',breathTip:'跟著圓圈一起呼吸',
+    fbCorrect:'答對了！做得很好！🎉',fbWrong:'這次沒答對，沒關係 💙',
+    fbWhyCorrect:'✅ 為什麼這樣做最好？',fbWhyWrong:'🔍 讓我們來了解一下：',
+    btnContinue:'繼續下一題 →',btnBackSelect:'完成！回到選擇畫面 →',btnFinalResult:'查看最終結果 🏆',
+    compTitle:'探索完成！',compScoreLabel:'題答對',
+    compStratTitle:'🌟 你學到的應對策略：',
+    compThermoBtn:'🌡️ 繼續：情緒溫度計遊戲',compRestartBtn:'🔄 重新挑戰四色遊戲',
+    tiTitle:'學校一天情緒溫度計',
+    tdNextBtn:'下一個時段 →',tdLastBtn:'查看今天的情緒報告 🏫',
+    trTitle:'學校情緒報告',trSub:'你今天在學校的情緒旅程',
+    trTipLabel:'💡 下次在學校可以這樣做：',
+    trRedoBtn:'🔄 重新記錄一次',trHomeBtn:'🏠 回到首頁重新開始',
+    redName:'生氣',yellowName:'焦慮',greenName:'快樂',blueName:'難過',
+    tdProg:(i)=>`時段 ${i} / 5`,
+    completeMsg:{
+      red:'今天在學校有不少激動的時刻。生氣是正常的情緒，但試著在說話或行動之前先深呼吸——冷靜之後，問題反而更容易解決 🌬️',
+      yellow:'今天在學校的焦慮感比較重。有點緊張代表你在乎，這很好！試著把大擔憂拆成小步驟，一次只做一件事 💪',
+      blue:'今天在學校的心情比較低落。允許自己有這樣的感受——難過不是軟弱。找一個你信任的朋友或老師說說話 💙',
+      green:'今天在學校的整體心情不錯！繼續帶著這份正能量，把好心情分享給身邊的同學 🌟',
+    },
+    trend:{improved:' 而且你的心情在一天中越來越好，太棒了 📈',worsened:' 今天有些辛苦，沒關係，明天是全新的開始 🌱',stable:''},
+  },
+  en:{
+    homeTitle:'Emotion Color Exploration',
+    homeSub:'Explore your emotions through four colors!<br>Learn the healthiest coping strategies!',
+    homeInfo:'🔴 Angry &nbsp;|&nbsp; 🟡 Anxious &nbsp;|&nbsp; 🟢 Happy &nbsp;|&nbsp; 🔵 Sad<br><strong>2 questions</strong> per emotion, <strong>8 total</strong><br>Then try the 🌡️ <strong>Emotion Thermometer</strong> and track your whole day!',
+    homeStart:'✨ Start Exploring',homeBack:'← Back to Instructions',
+    selTitle:'Choose an Emotion',scoreLabel:'Score',
+    prompt:'🤔 What would you do?',
+    breathLabel:'Breathe in…',breathTip:'Breathe along with the circle',
+    fbCorrect:'Correct! Great job! 🎉',fbWrong:"Not this time — that's okay 💙",
+    fbWhyCorrect:'✅ Why is this the best choice?',fbWhyWrong:'🔍 Let\'s learn more:',
+    btnContinue:'Next Question →',btnBackSelect:'Done! Back to Selection →',btnFinalResult:'See Final Results 🏆',
+    compTitle:'Exploration Complete!',compScoreLabel:'questions correct',
+    compStratTitle:'🌟 Coping strategies you learned:',
+    compThermoBtn:'🌡️ Continue: Emotion Thermometer',compRestartBtn:'🔄 Try the Color Game Again',
+    tiTitle:'School Day Emotion Thermometer',
+    tdNextBtn:'Next Period →',tdLastBtn:"See Today's Emotion Report 🏫",
+    trTitle:'School Emotion Report',trSub:'Your emotional journey at school today',
+    trTipLabel:'💡 Try this next time at school:',
+    trRedoBtn:'🔄 Record Again',trHomeBtn:'🏠 Back to Home',
+    redName:'Angry',yellowName:'Anxious',greenName:'Happy',blueName:'Sad',
+    tdProg:(i)=>`Period ${i} / 5`,
+    completeMsg:{
+      red:'There were quite a few intense moments at school today. Anger is a normal emotion — but try taking a deep breath before speaking or acting. Problems are actually easier to solve once you are calm 🌬️',
+      yellow:'Anxiety was quite strong at school today. Feeling a bit nervous means you care — that is good! Try breaking big worries into small steps, doing one thing at a time 💪',
+      blue:'Your mood was a little low at school today. Allow yourself to feel that way — sadness is not weakness. Find a trusted friend or teacher and talk about it 💙',
+      green:'Your overall mood at school today was great! Keep carrying that positive energy and share your good mood with the classmates around you 🌟',
+    },
+    trend:{improved:' And your mood kept improving through the day — wonderful! 📈',worsened:' Today was a bit tough — that\'s okay, tomorrow is a brand new start 🌱',stable:''},
+  }
+};
+
+// ── helper ──
+function getEmotionData(key){
+  const zh = EMOTIONS[key];
+  if(lang==='en'){
+    const en = EN_EMOTIONS[key];
+    return {...zh, name:en.name, moodTag:en.moodTag,
+      questions: zh.questions.map((q,i)=>({...q,
+        scenario:en.questions[i].scenario,
+        choices:en.questions[i].choices,
+        explain:en.questions[i].explain,
+        tip:en.questions[i].tip}))};
+  }
+  return zh;
+}
+function getThermoSession(idx){
+  return lang==='en' ? {...THERMO_SESSIONS[idx],...THERMO_SESSIONS_EN[idx]} : THERMO_SESSIONS[idx];
+}
+function getThermoLevelLabel(level){
+  const base = THERMO_LEVELS[level];
+  if(lang==='en') return {...base,...THERMO_LEVELS_EN[level]};
+  return base;
+}
+function getThermoTip(level,timeName){
+  if(lang==='en') return THERMO_TIPS_EN[level][timeName] || THERMO_TIPS_EN[level]['Morning Study'];
+  return THERMO_TIPS[level][timeName];
+}
+
+// ── setLang ──
+function setLang(l){
+  lang = l;
+  document.getElementById('html-root').lang = l==='zh'?'zh-TW':'en';
+  // FAB
+  document.getElementById('fab-zh').className = l==='zh'?'active':'';
+  document.getElementById('fab-en').className = l==='en'?'active':'';
+  // Home lang buttons
+  document.getElementById('hlb-zh').className = 'home-lang-btn'+(l==='zh'?' active':'');
+  document.getElementById('hlb-en').className = 'home-lang-btn'+(l==='en'?' active':'');
+  // Static home
+  const u=UI[l];
+  document.getElementById('h-title').textContent = u.homeTitle;
+  document.getElementById('h-sub').innerHTML = u.homeSub;
+  document.getElementById('h-info').innerHTML = u.homeInfo;
+  document.getElementById('h-start-btn').textContent = u.homeStart;
+  document.getElementById('h-back').textContent = u.homeBack;
+  // Select
+  const st=document.getElementById('sel-title');if(st)st.textContent=u.selTitle;
+  const er=document.getElementById('en-red');if(er)er.textContent=u.redName;
+  const ey=document.getElementById('en-yellow');if(ey)ey.textContent=u.yellowName;
+  const eg=document.getElementById('en-green');if(eg)eg.textContent=u.greenName;
+  const eb=document.getElementById('en-blue');if(eb)eb.textContent=u.blueName;
+  updateSelectScreen();
+  // Complete
+  const ct=document.getElementById('comp-title-el');if(ct)ct.textContent=u.compTitle;
+  const csl=document.getElementById('comp-score-label');if(csl)csl.textContent=u.compScoreLabel;
+  const cst=document.getElementById('comp-strat-title');if(cst)cst.textContent=u.compStratTitle;
+  const ctb=document.getElementById('comp-thermo-btn');if(ctb)ctb.textContent=u.compThermoBtn;
+  const crb=document.getElementById('comp-restart-btn');if(crb)crb.textContent=u.compRestartBtn;
+  // Thermo intro
+  const tit=document.getElementById('ti-title');if(tit)tit.textContent=u.tiTitle;
+  // Thermo result
+  const trr=document.getElementById('tr-redo-btn');if(trr)trr.textContent=u.trRedoBtn;
+  const trh=document.getElementById('tr-home-btn');if(trh)trh.textContent=u.trHomeBtn;
+  const trtitle=document.getElementById('tr-title');if(trtitle)trtitle.textContent=u.trTitle;
+  const trsub=document.getElementById('tr-sub');if(trsub)trsub.textContent=u.trSub;
+  const trtip=document.getElementById('tr-tip-label');if(trtip)trtip.textContent=u.trTipLabel;
+}
+
+
 /* ─────────────────────────────────────────
    COLOUR GAME DATA
 ───────────────────────────────────────── */
@@ -933,23 +1249,27 @@ function startEmotion(key){
   state.currentEmotion=key; state.currentQIndex=0; renderQuestion();
 }
 function renderQuestion(){
-  const em=EMOTIONS[state.currentEmotion], q=em.questions[state.currentQIndex];
+  const em=getEmotionData(state.currentEmotion), q=em.questions[state.currentQIndex];
   const tot=em.questions.length, idx=state.currentQIndex;
   document.body.style.background=em.body;
   spawnParticles(state.currentEmotion);
   const badge=document.getElementById('q-badge');
   badge.textContent=`${em.emoji} ${em.name}`;
   Object.assign(badge.style,{background:em.badge.bg,color:em.badge.color});
-  document.getElementById('q-progress-text').textContent=`題目 ${idx+1} / ${tot}`;
+  document.getElementById('q-progress-text').textContent=UI[lang].tdProg ? `${UI[lang].tdProg(idx+1).replace('Period','Question').replace('時段','題目')}` : `題目 ${idx+1} / ${tot}`;
+  document.getElementById('q-progress-text').textContent=lang==='en'?`Question ${idx+1} / ${tot}`:`題目 ${idx+1} / ${tot}`;
   Object.assign(document.getElementById('q-bar').style,{width:`${(idx/tot)*100}%`,background:em.badge.bg});
   document.getElementById('scene-icon').textContent=q.sceneEmoji;
   const mt=document.getElementById('scene-mood-tag');
   mt.textContent=em.moodTag; mt.setAttribute('style',em.moodTagStyle);
   const sb=document.getElementById('q-scenario');
   sb.textContent=q.scenario; sb.style.borderLeftColor=em.border; sb.style.background=em.tip_bg;
+  document.getElementById('q-prompt').textContent=UI[lang].prompt;
   const bw=document.getElementById('breath-wrap');
   if(state.currentEmotion==='red'){bw.style.display='flex';startBreathCycle();}
   else{bw.style.display='none';stopBreathCycle();}
+  document.getElementById('breath-label').textContent=UI[lang].breathLabel;
+  document.querySelector('.breath-tip') && (document.querySelector('.breath-tip').textContent=UI[lang].breathTip);
   const shuffled=[...q.choices].sort(()=>Math.random()-.5);
   const labels=['A','B','C','D'];
   const container=document.getElementById('choices-container'); container.innerHTML='';
@@ -972,17 +1292,17 @@ function onChoiceClick(clickedBtn,choice,shuffled,container){
   setTimeout(()=>renderFeedback(isCorrect),700);
 }
 function renderFeedback(isCorrect){
-  const em=EMOTIONS[state.currentEmotion], q=em.questions[state.currentQIndex];
+  const em=getEmotionData(state.currentEmotion), q=em.questions[state.currentQIndex];
   const emojis=isCorrect?em.fbCorrect:em.fbWrong;
   document.getElementById('fb-float-row').innerHTML=emojis.map(e=>`<span>${e}</span>`).join('');
   const title=document.getElementById('fb-title');
-  title.textContent=isCorrect?'答對了！做得很好！🎉':'這次沒答對，沒關係 💙';
+  title.textContent=isCorrect?UI[lang].fbCorrect:UI[lang].fbWrong;
   title.className='fb-title '+(isCorrect?'correct':'wrong');
-  document.getElementById('fb-explain').innerHTML=`<strong>${isCorrect?'✅ 為什麼這樣做最好？':'🔍 讓我們來了解一下：'}</strong>${q.explain}`;
+  document.getElementById('fb-explain').innerHTML=`<strong>${isCorrect?UI[lang].fbWhyCorrect:UI[lang].fbWhyWrong}</strong>${q.explain}`;
   const tip=document.getElementById('fb-tip'); tip.textContent=q.tip; tip.style.background=em.tip_bg;
   const isLastQ=state.currentQIndex>=em.questions.length-1;
   const allDone=state.completed.size+1>=Object.keys(EMOTIONS).length;
-  document.getElementById('btn-next').textContent=!isLastQ?'繼續下一題 →':!allDone?'完成！回到選擇畫面 →':'查看最終結果 🏆';
+  document.getElementById('btn-next').textContent=!isLastQ?UI[lang].btnContinue:!allDone?UI[lang].btnBackSelect:UI[lang].btnFinalResult;
   showScreen('feedback');
 }
 function nextStep(){
@@ -1006,7 +1326,7 @@ function renderCompletion(){
   else{trophy='🌱';message='這是一個很好的開始！情緒管理是一輩子的功課 💙';}
   document.getElementById('comp-trophy').textContent=trophy;
   document.getElementById('comp-message').textContent=message;
-  document.getElementById('comp-strategies').innerHTML=STRATEGIES.map(s=>`<div class="strategy-item"><span class="strategy-icon">${s.icon}</span><span>${s.text}</span></div>`).join('');
+  document.getElementById('comp-strategies').innerHTML=(lang==='en'?STRATEGIES_EN:STRATEGIES).map(s=>`<div class="strategy-item"><span class="strategy-icon">${s.icon}</span><span>${s.text}</span></div>`).join('');
   showScreen('complete');
 }
 function restartGame(){
@@ -1043,10 +1363,10 @@ function startThermoGame(){
 }
 
 function renderThermoSession(){
-  const sess=THERMO_SESSIONS[thermoState.sessionIdx];
+  const sess=getThermoSession(thermoState.sessionIdx);
   document.getElementById('td-icon').textContent=sess.icon;
   document.getElementById('td-time').innerHTML=`${sess.time}<span class="time-badge">${sess.timeLabel||''}</span>`;
-  document.getElementById('td-prog').textContent=`時段 ${thermoState.sessionIdx+1} / 5`;
+  document.getElementById('td-prog').textContent=UI[lang].tdProg(thermoState.sessionIdx+1);
   document.getElementById('td-question').textContent=sess.q;
   // Show school scenario
   const sc=document.getElementById('td-scenario');
@@ -1059,7 +1379,7 @@ function renderThermoSession(){
   bulb.style.background='#e2e8f0'; bulb.style.boxShadow='none'; bulb.textContent='🌡️';
   // next button label
   const isLast=thermoState.sessionIdx>=THERMO_SESSIONS.length-1;
-  document.getElementById('td-next-btn').textContent=isLast?'查看今天的情緒報告 🏫':'下一個時段 →';
+  document.getElementById('td-next-btn').textContent=isLast?UI[lang].tdLastBtn:UI[lang].tdNextBtn;
 }
 
 function selectThermoLevel(level){
@@ -1091,8 +1411,8 @@ function selectThermoLevel(level){
   fb.style.display='block';
   fb.style.background=level==='red'?'#fff1f2':level==='yellow'?'#fffbeb':level==='blue'?'#eff6ff':'#f0fdf4';
   document.getElementById('tf-emoji').textContent=lvl.emoji;
-  document.getElementById('tf-label').textContent=sess.time+'  '+lvl.label;
-  document.getElementById('tf-tip').textContent=THERMO_TIPS[level][sess.time];
+  const lvlLabel=getThermoLevelLabel(level); document.getElementById('tf-label').textContent=sess.time+'  '+lvlLabel.label;
+  document.getElementById('tf-tip').textContent=getThermoTip(level, sess.time);
 
   // record
   thermoState.recordings[thermoState.sessionIdx]={level, lvl, sess};
@@ -1218,19 +1538,15 @@ function renderThermoResult(){
   const dominant=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
   const trend=levelVal[recs[recs.length-1].level]<levelVal[recs[0].level]?'improved':levelVal[recs[recs.length-1].level]>levelVal[recs[0].level]?'worsened':'stable';
 
-  const msgs={
-    red:'今天在學校有不少激動的時刻。生氣是正常的情緒，但試著在說話或行動之前先深呼吸——冷靜之後，問題反而更容易解決 🌬️',
-    yellow:'今天在學校的焦慮感比較重。有點緊張代表你在乎，這很好！試著把大擔憂拆成小步驟，一次只做一件事 💪',
-    blue:'今天在學校的心情比較低落。允許自己有這樣的感受——難過不是軟弱。找一個你信任的朋友或老師說說話 💙',
-    green:'今天在學校的整體心情不錯！繼續帶著這份正能量，把好心情分享給身邊的同學 🌟',
-  };
-  const trendMsg=trend==='improved'?' 而且你的心情在一天中越來越好，太棒了 📈':trend==='worsened'?' 今天有些辛苦，沒關係，明天是全新的開始 🌱':'';
+  const msgs=UI[lang].completeMsg;
+  const trendMsg=UI[lang].trend[trend] || '';
   document.getElementById('summary-msg').textContent=msgs[dominant]+trendMsg;
 
   // Strategies based on emotions that appeared
   const usedLevels=[...new Set(recs.map(r=>r.level))];
+  const strats=lang==='en'?THERMO_STRATS_EN:THERMO_STRATS;
   document.getElementById('summary-strategies').innerHTML=usedLevels.map(l=>`
-    <div class="ss-item"><span class="ss-icon">${THERMO_STRATS[l].icon}</span><span>${THERMO_STRATS[l].text}</span></div>`).join('');
+    <div class="ss-item"><span class="ss-icon">${strats[l].icon}</span><span>${strats[l].text}</span></div>`).join('');
 
   showScreen('thermo-result');
 }
@@ -1263,5 +1579,10 @@ try {
   document.getElementById('qrcode').innerHTML = '<p style="font-size:0.8rem;color:#94a3b8;padding:12px">QR Code 生成中…<br>請在瀏覽器中開啟</p>';
 }
 </script>
+
+<div class="lang-fab" id="lang-fab">
+  <button id="fab-zh" class="active" onclick="setLang('zh')">中文</button>
+  <button id="fab-en" onclick="setLang('en')">EN</button>
+</div>
 </body>
 </html>
